@@ -7,9 +7,26 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+// ✅ Replace with your actual frontend URL
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+
+// CORS config
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
+// ✅ Simple health check route
+app.get("/", (req, res) => {
+  res.send({ message: "Blog generator backend is up and running." });
+});
+
+// ✅ Main POST route
 app.post("/api/generate-blog", async (req, res) => {
   const { prompt } = req.body;
 
